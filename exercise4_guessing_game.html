@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Exercise 4 - Number Guessing Game</title>
+</head>
+<body>
+<h1>Number Guessing Game</h1>
+
+<p>Guess the number between 1 and 100. You have 10 turns.</p>
+
+<input type="text" id="guess">
+<input type="submit" value="Guess" onclick="makeGuess()">
+<button id="restart" style="display:none" onclick="startGame()">Play Again</button>
+
+<p id="message"></p>
+<p id="previous"></p>
+
+<script src="randominteger.js"></script>
+<script>
+var target;
+var turnsLeft;
+var previousGuesses;
+
+function startGame() {
+    target = randomInt();
+    turnsLeft = 10;
+    previousGuesses = [];
+    document.getElementById('guess').value = '';
+    document.getElementById('guess').disabled = false;
+    document.getElementById('message').innerHTML = '';
+    document.getElementById('previous').innerHTML = '';
+    document.getElementById('restart').style.display = 'none';
+}
+
+function makeGuess() {
+    var guess = parseInt(document.getElementById('guess').value);
+    if (isNaN(guess)) {
+        alert("Not a valid number: " + document.getElementById('guess').value);
+        return;
+    }
+
+    turnsLeft--;
+    previousGuesses.push(guess);
+
+    var message;
+    if (guess === target) {
+        message = 'Right! You guessed it in ' + (10 - turnsLeft) + ' turn(s).';
+        endGame();
+    } else {
+        if (guess < target) {
+            message = 'Wrong - too low. Turns left: ' + turnsLeft;
+        } else {
+            message = 'Wrong - too high. Turns left: ' + turnsLeft;
+        }
+        if (turnsLeft === 0) {
+            message += ' Game over. The number was ' + target + '.';
+            endGame();
+        }
+    }
+
+    document.getElementById('message').innerHTML = message;
+    document.getElementById('previous').innerHTML = 'Previous guesses: ' + previousGuesses.join(', ');
+    document.getElementById('guess').value = '';
+}
+
+function endGame() {
+    document.getElementById('guess').disabled = true;
+    document.getElementById('restart').style.display = 'inline';
+}
+
+startGame();
+</script>
+
+</body>
+</html>
